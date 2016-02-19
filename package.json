@@ -1,0 +1,29 @@
+{
+  "name": "persistent-tunnel",
+  "version": "1.0.0",
+  "description": "HTTP Agent for tunneling proxies with persistent sockets",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/resin-io/persistent-tunnel.git"
+  },
+  "keywords": [],
+  "author": "Kostas Lekkas <kostas@resin.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/resin-io/persistent-tunnel/issues"
+  },
+  "homepage": "https://github.com/resin-io/persistent-tunnel#readme",
+  "devDependencies": {
+    "bluebird": "^3.3.1",
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "node-tunnel": "^0.1.2"
+  }
+}
