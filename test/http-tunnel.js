@@ -3,7 +3,7 @@ var nodeTunnel = require('node-tunnel');
 var Promise = require('bluebird');
 var expect = require('chai').expect;
 
-var tunnelAgent = require('../').Agent;
+var tunnel = require('../');
 
 var serverPort = 8080;
 var tunnelPort = 3128;
@@ -11,7 +11,7 @@ var tunnelPort = 3128;
 var N = 5;
 
 var server;
-var tunnel;
+var tunnelProxy;
 var agent;
 
 function createServer() {
@@ -24,10 +24,10 @@ function createServer() {
   });
 }
 
-function createTunnel() {
+function createTunnelProxy() {
   return Promise.fromCallback(function(cb) {
-    tunnel = nodeTunnel.createTunnel();
-    tunnel.listen(tunnelPort, cb);
+    tunnelProxy = nodeTunnel.createTunnel();
+    tunnelProxy.listen(tunnelPort, cb);
   });
 }
 
@@ -59,22 +59,23 @@ describe('HTTP keepAlive Tunnel', function() {
 
   beforeEach(function(done) {
     createServer()
-    .then(createTunnel())
+    .then(createTunnelProxy())
     .then(done);
   });
 
   afterEach(function() {
     server.close();
-    tunnel.close();
+    tunnelProxy.close();
   });
 
   it('should make tunneling requests', function(done) {
-    agent = new tunnelAgent({
+    agent = new tunnel.Agent({
       proxy: {
         host: 'localhost',
         port: tunnelPort
       }
     });
+    agent.createConnection = tunnel.createConnection;
 
     connections = 0;
     for (var i = 0; i < N; i++) {
@@ -83,13 +84,15 @@ describe('HTTP keepAlive Tunnel', function() {
   });
 
   it('should keep alive', function(done) {
-    agent = new tunnelAgent({
+    agent = new tunnel.Agent({
       keepAlive: true,
       proxy: {
         host: 'localhost',
         port: tunnelPort
       }
     });
+    agent.createConnection = tunnel.createConnection;
+
     connections = 0;
     for (var i = 0; i < N; i++) {
       var req = makeRequest(agent, i, done);
@@ -99,13 +102,14 @@ describe('HTTP keepAlive Tunnel', function() {
   it('should reuse socket', function(done) {
     var savedSocket;
 
-    agent = new tunnelAgent({
+    agent = new tunnel.Agent({
       keepAlive: true,
       proxy: {
         host: 'localhost',
         port: tunnelPort,
       },
     });
+    agent.createConnection = tunnel.createConnection;
 
     connections = 0;
     for (var i = 0; i < 2; i++) {
@@ -131,7 +135,7 @@ describe('HTTP keepAlive Tunnel', function() {
     var savedSocket;
     var socketTimeout = 500;
 
-    agent = new tunnelAgent({
+    agent = new tunnel.Agent({
       keepAlive: true,
       maxSockets: Infinity,
       proxy: {
@@ -140,6 +144,7 @@ describe('HTTP keepAlive Tunnel', function() {
         timeout: socketTimeout
       },
     });
+    agent.createConnection = tunnel.createConnection;
 
     connections = 0;
     for (var i = 0; i < 2; i++) {
@@ -160,7 +165,7 @@ describe('HTTP keepAlive Tunnel', function() {
   });
 
   it('should throw error if tunnel cannot be established', function(done) {
-    agent = new tunnelAgent({
+    agent = new tunnel.Agent({
       proxy: {
         host: 'localhost',
         port: tunnelPort,
@@ -168,8 +173,9 @@ describe('HTTP keepAlive Tunnel', function() {
       keepAlive: true,
       maxSockets: Infinity
     });
+    agent.createConnection = tunnel.createConnection;
 
-    tunnel.close(function() {
+    tunnelProxy.close(function() {
       connections = 0;
       var req = makeRequest(agent, 0);
       req.on('error', function(err) {
@@ -180,7 +186,7 @@ describe('HTTP keepAlive Tunnel', function() {
   });
 
   it('throw an error if tunnel server drops connection', function(done) {
-    agent = new tunnelAgent({
+    agent = new tunnel.Agent({
       proxy: {
         host: 'localhost',
         port: tunnelPort,
@@ -188,8 +194,9 @@ describe('HTTP keepAlive Tunnel', function() {
       keepAlive: true,
       maxSockets: Infinity
     });
+    agent.createConnection = tunnel.createConnection;
 
-    tunnel.use(function(req, socket, head, next) {
+    tunnelProxy.use(function(req, socket, head, next) {
       socket.write('HTTP/1.0 402 Payment Required\r\n\r\n');
       socket.end();
     });
