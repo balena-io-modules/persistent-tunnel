@@ -137,7 +137,6 @@ describe('HTTP keepAlive Tunnel', function() {
 
     agent = new tunnel.Agent({
       keepAlive: true,
-      maxSockets: Infinity,
       proxy: {
         host: 'localhost',
         port: tunnelPort,
@@ -171,7 +170,6 @@ describe('HTTP keepAlive Tunnel', function() {
         port: tunnelPort,
       },
       keepAlive: true,
-      maxSockets: Infinity
     });
     agent.createConnection = tunnel.createConnection;
 
@@ -192,7 +190,6 @@ describe('HTTP keepAlive Tunnel', function() {
         port: tunnelPort,
       },
       keepAlive: true,
-      maxSockets: Infinity
     });
     agent.createConnection = tunnel.createConnection;
 
