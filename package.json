@@ -26,7 +26,5 @@
     "mocha": "^2.4.5",
     "node-tunnel": "^0.1.2"
   },
-  "dependencies": {
-    "util-extend": "^1.0.3"
-  }
+  "dependencies": {}
 }
