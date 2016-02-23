@@ -8,7 +8,6 @@ N = 5
 serverPort = 8080
 tunnelPort = 3128
 tunnelProxy = null
-connections = null
 agent = null
 server = null
 
@@ -24,7 +23,6 @@ createTunnelProxy = ->
 		tunnelProxy = nodeTunnel.createTunnel()
 		tunnelProxy.listen(tunnelPort, cb)
 
-
 makeRequest = (agent, i, cb) ->
 	reqOptions =
 		port: serverPort
@@ -35,7 +33,7 @@ makeRequest = (agent, i, cb) ->
 		res.on 'data', (data) ->
 			expect(data.toString()).to.equal("response/#{i}")
 		res.on 'end', ->
-			cb() if ++connections is N and cb?
+			cb?()
 
 	req.end()
 	return req
@@ -61,7 +59,10 @@ describe 'HTTP keepAlive Tunnel', ->
 
 		connections = 0
 		for i in [0...N]
-			req = makeRequest(agent, i, done)
+			makeRequest agent, i, () ->
+				connections++
+				if connections is N
+					done()
 
 	it 'should keep alive', (done) ->
 		agent = new tunnel.Agent
@@ -73,7 +74,10 @@ describe 'HTTP keepAlive Tunnel', ->
 
 		connections = 0
 		for i in [0...N]
-			req = makeRequest(agent, i, done)
+			makeRequest agent, i, () ->
+				connections++
+				if connections is N
+					done()
 
 	it 'should reuse socket', (done) ->
 		agent = new tunnel.Agent
