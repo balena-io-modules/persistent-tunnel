@@ -15,7 +15,12 @@
     "type": "git",
     "url": "git+https://github.com/resin-io/persistent-tunnel.git"
   },
-  "keywords": [],
+  "keywords": [
+    "http",
+    "agent",
+    "proxy",
+    "tunnel"
+  ],
   "author": "Kostas Lekkas <kostas@resin.io>",
   "license": "MIT",
   "bugs": {
@@ -29,5 +34,8 @@
     "mocha": "^2.4.5",
     "node-tunnel": "^0.1.2"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "engines": {
+    "node": "4.x"
+  }
 }
