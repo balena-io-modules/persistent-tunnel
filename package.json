@@ -7,7 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha"
+    "pretest": "./node_modules/.bin/coffee -o build -c lib",
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register",
+    "prepublish": "./node_modules/.bin/coffee -o build -c lib"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,7 @@
   "devDependencies": {
     "bluebird": "^3.3.1",
     "chai": "^3.5.0",
+    "coffee-script": "^1.10.0",
     "mocha": "^2.4.5",
     "node-tunnel": "^0.1.2"
   },

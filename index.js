@@ -1,1 +1,1 @@
-module.exports = require('./lib/persistent-tunnel');
+module.exports = require('./build/persistent-tunnel');
