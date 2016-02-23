@@ -11,6 +11,12 @@ createTunnelConnection = (options, cb) ->
 		path: "#{options.host}:#{options.port}"
 		agent: false
 
+	onError = (err, res) ->
+		cause = res?.statusCode ? err.message
+		error = new Error("tunneling socket could not be established: #{cause}")
+		error.core = res?.statusCode ? 500
+		cb(error)
+
 	onConnect = (res, socket, head) ->
 		socket.removeAllListeners()
 
@@ -19,17 +25,9 @@ createTunnelConnection = (options, cb) ->
 				socket.setTimeout proxyOptions.timeout, ->
 					socket.destroy()
 					socket.emit('agentRemove')
-
 			cb(null, socket)
 		else
-			error = new Error("tunneling socket could not be established, statusCode=#{res.statusCode}")
-			error.code = 'ECONNRESET'
-			cb(error)
-
-	onError = (err) ->
-		error = new Error("tunneling socket could not be established, cause=#{err.message}")
-		error.code = 'ECONNRESET'
-		cb(error)
+			onError(null, res)
 
 	req = http.request(connectOptions)
 	req.once('connect', onConnect)

@@ -18,8 +18,14 @@
       path: options.host + ":" + options.port,
       agent: false
     };
+    onError = function(err, res) {
+      var cause, error, ref3, ref4;
+      cause = (ref3 = res != null ? res.statusCode : void 0) != null ? ref3 : err.message;
+      error = new Error("tunneling socket could not be established: " + cause);
+      error.core = (ref4 = res != null ? res.statusCode : void 0) != null ? ref4 : 500;
+      return cb(error);
+    };
     onConnect = function(res, socket, head) {
-      var error;
       socket.removeAllListeners();
       if (res.statusCode === 200) {
         if (proxyOptions.timeout != null) {
@@ -30,16 +36,8 @@
         }
         return cb(null, socket);
       } else {
-        error = new Error("tunneling socket could not be established, statusCode=" + res.statusCode);
-        error.code = 'ECONNRESET';
-        return cb(error);
+        return onError(null, res);
       }
-    };
-    onError = function(err) {
-      var error;
-      error = new Error("tunneling socket could not be established, cause=" + err.message);
-      error.code = 'ECONNRESET';
-      return cb(error);
     };
     req = http.request(connectOptions);
     req.once('connect', onConnect);
