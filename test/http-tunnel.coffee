@@ -23,7 +23,7 @@ createTunnelProxy = ->
 		tunnelProxy = nodeTunnel.createTunnel()
 		tunnelProxy.listen(tunnelPort, cb)
 
-makeRequest = (agent, i, cb) ->
+makeRequest = (agent, i = 1, cb) ->
 	reqOptions =
 		port: serverPort
 		path: "/#{i}"
@@ -60,9 +60,7 @@ describe 'HTTP keepAlive Tunnel', ->
 		connections = 0
 		for i in [0...N]
 			makeRequest agent, i, () ->
-				connections++
-				if connections is N
-					done()
+				done() if ++connections is N
 
 	it 'should keep alive', (done) ->
 		agent = new tunnel.Agent
@@ -75,9 +73,7 @@ describe 'HTTP keepAlive Tunnel', ->
 		connections = 0
 		for i in [0...N]
 			makeRequest agent, i, () ->
-				connections++
-				if connections is N
-					done()
+				done() if ++connections is N
 
 	it 'should reuse socket', (done) ->
 		agent = new tunnel.Agent
@@ -87,7 +83,6 @@ describe 'HTTP keepAlive Tunnel', ->
 				port: tunnelPort
 		agent.createConnection = tunnel.createConnection
 
-		connections = 0
 		savedSocket = null
 		for i in [0...2]
 			# A delay is induced here to 1. allow the connection to be
@@ -114,7 +109,6 @@ describe 'HTTP keepAlive Tunnel', ->
 				timeout: socketTimeout
 		agent.createConnection = tunnel.createConnection
 
-		connections = 0
 		savedSocket = null
 		for i in [0...2]
 			do (i) ->
@@ -137,8 +131,7 @@ describe 'HTTP keepAlive Tunnel', ->
 		agent.createConnection = tunnel.createConnection
 
 		tunnelProxy.close ->
-			connections = 0
-			req = makeRequest(agent, 0)
+			req = makeRequest(agent)
 			req.on 'error', (err) ->
 				console.log('Error: ', err.message)
 				done()
@@ -155,8 +148,7 @@ describe 'HTTP keepAlive Tunnel', ->
 			socket.write('HTTP/1.0 402 Payment Required\r\n\r\n')
 			socket.end()
 
-		connections = 0
-		req = makeRequest(agent, 0)
+		req = makeRequest(agent)
 		req.on 'error', (err) ->
 			console.log('Error: ', err.message)
 			done()
