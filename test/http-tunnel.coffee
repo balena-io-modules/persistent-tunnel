@@ -133,7 +133,7 @@ describe 'HTTP keepAlive Tunnel', ->
 		tunnelProxy.close ->
 			req = makeRequest(agent)
 			req.on 'error', (err) ->
-				console.log('Error: ', err.message)
+				expect(err.statusCode).to.equal(500);
 				done()
 
 	it 'throw an error if tunnel server drops connection', (done) ->
@@ -150,5 +150,5 @@ describe 'HTTP keepAlive Tunnel', ->
 
 		req = makeRequest(agent)
 		req.on 'error', (err) ->
-			console.log('Error: ', err.message)
+			expect(err.statusCode).to.equal(402)
 			done()

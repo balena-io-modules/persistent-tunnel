@@ -22,7 +22,7 @@
       var cause, error, ref3, ref4;
       cause = (ref3 = res != null ? res.statusCode : void 0) != null ? ref3 : err.message;
       error = new Error("tunneling socket could not be established: " + cause);
-      error.core = (ref4 = res != null ? res.statusCode : void 0) != null ? ref4 : 500;
+      error.statusCode = (ref4 = res != null ? res.statusCode : void 0) != null ? ref4 : 500;
       return cb(error);
     };
     onConnect = function(res, socket, head) {

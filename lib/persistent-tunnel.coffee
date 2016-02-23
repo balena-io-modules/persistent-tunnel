@@ -14,7 +14,7 @@ createTunnelConnection = (options, cb) ->
 	onError = (err, res) ->
 		cause = res?.statusCode ? err.message
 		error = new Error("tunneling socket could not be established: #{cause}")
-		error.core = res?.statusCode ? 500
+		error.statusCode = res?.statusCode ? 500
 		cb(error)
 
 	onConnect = (res, socket, head) ->
