@@ -59,7 +59,7 @@ describe 'HTTP keepAlive Tunnel', ->
 
 		connections = 0
 		for i in [0...N]
-			makeRequest agent, i, () ->
+			makeRequest agent, i, ->
 				done() if ++connections is N
 
 	it 'should keep alive', (done) ->
@@ -72,7 +72,7 @@ describe 'HTTP keepAlive Tunnel', ->
 
 		connections = 0
 		for i in [0...N]
-			makeRequest agent, i, () ->
+			makeRequest agent, i, ->
 				done() if ++connections is N
 
 	it 'should reuse socket', (done) ->
@@ -133,7 +133,8 @@ describe 'HTTP keepAlive Tunnel', ->
 		tunnelProxy.close ->
 			req = makeRequest(agent)
 			req.on 'error', (err) ->
-				expect(err.statusCode).to.equal(500);
+				expect(err.statusCode).to.equal(500)
+				expect(err).to.be.an.instanceof(tunnel.TunnelingError)
 				done()
 
 	it 'throw an error if tunnel server drops connection', (done) ->
@@ -151,4 +152,5 @@ describe 'HTTP keepAlive Tunnel', ->
 		req = makeRequest(agent)
 		req.on 'error', (err) ->
 			expect(err.statusCode).to.equal(402)
+			expect(err).to.be.an.instanceof(tunnel.TunnelingError)
 			done()
