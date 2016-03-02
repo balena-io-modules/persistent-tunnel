@@ -34,7 +34,9 @@
     "mocha": "^2.4.5",
     "node-tunnel": "^0.1.2"
   },
-  "dependencies": {},
+  "dependencies": {
+    "typed-error": "^0.1.0"
+  },
   "engines": {
     "node": "4.x"
   }
