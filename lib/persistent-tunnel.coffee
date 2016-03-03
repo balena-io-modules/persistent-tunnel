@@ -1,8 +1,11 @@
 net = require 'net'
 http = require 'http'
 NodeAgent = require '../vendor/_http_agent'
+TypedError = require 'typed-error'
 
-createTunnelConnection = (options, cb) ->
+module.exports.TunnelingError = class TunnelingError extends TypedError
+module.exports.Agent = NodeAgent.Agent
+module.exports.createConnection = (options, cb) ->
 	proxyOptions = options.proxy ? {}
 	connectOptions =
 		method: 'CONNECT'
@@ -13,7 +16,7 @@ createTunnelConnection = (options, cb) ->
 
 	onError = (err, res) ->
 		cause = res?.statusCode ? err.message
-		error = new Error("tunneling socket could not be established: #{cause}")
+		error = new TunnelingError("tunneling socket could not be established: #{cause}")
 		error.statusCode = res?.statusCode ? 500
 		cb(error)
 
@@ -33,6 +36,3 @@ createTunnelConnection = (options, cb) ->
 	req.once('connect', onConnect)
 	req.once('error', onError)
 	req.end()
-
-module.exports.Agent = NodeAgent.Agent
-module.exports.createConnection = createTunnelConnection
