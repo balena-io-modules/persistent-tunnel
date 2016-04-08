@@ -79,23 +79,23 @@ var req = http.request({
 
 ## Configuration
 
-When `keepAlive` is set to `true`, socket pooling/reuse
+When `keepAlive` is set to `true`, socket pooling / reuse
 is enabled by the HTTP Agent. In addition to managing the pool,
 the HTTP Agent calls `setKeepAlive()` on each pooled socket so
-that TCP KeepAlive packets are sent over the established
-connection, in small intervals, to keep it alive.
+that TCP KeepAlive packets are sent over the established connection
+in small intervals. Any intermediate TCP Load Balancers / Proxies
+along the tunnel connection should detect the TCP KeepAlive packets
+and keep the connection alive.
 
-When `timeout` is set, the connection will get severed if no data
-has been transfered over the socket for the specified time.
-TCP KeepAlive packets do not count as data.
+When `timeout` is set, the connection will get severed if no data has
+been transfered over the socket for the specified time. TCP KeepAlive
+packets do not count as data.
 
-The `timeout` setting is useful to make sure that idle sockets
-will eventually get `destroy()`'ed and release their resources.
-Any intermediate TCP Load Balancers / Proxies along the tunnel
-connection should detect the TCP KeepAlive packets and keep the
-connection active. If, however, the connection does get dropped
-for any reason, the underlying socket will emit an error and 
-will, eventually, get properly removed from the pool by the HTTP Agent.
+The `timeout` setting is useful to make sure that idle sockets will
+eventually get `destroy()`'ed and release their resources. If the tunnel 
+connection gets dropped before the timeout for any reason, the underlying
+socket will emit an error that [will result in it being removed from the
+HTTP Agent pool](https://github.com/resin-io/persistent-tunnel/blob/master/vendor/_http_agent.js#L246-L252) (and its resources released, too).
 
 TODO
 ----
