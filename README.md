@@ -91,15 +91,11 @@ TCP KeepAlive packets do not count as data.
 
 The `timeout` setting is useful to make sure that idle sockets
 will eventually get `destroy()`'ed and release their resources.
-Any intermediate TCP Load Balancers / Proxies should detect the 
-TCP KeepAlive packets and keep the connection active. If, however, 
-the connection does get dropped for any reason, the underlying socket
-will emit an error and will, eventually, get properly removed from
-the pool by the HTTP Agent.
-
-If there are intermediate Load Balancers / Proxies, then
-an appropriate setting for `timeout` would be a value _over_ the
-idle timeout setting of these intermediate servers.
+Any intermediate TCP Load Balancers / Proxies along the tunnel
+connection should detect the TCP KeepAlive packets and keep the
+connection active. If, however, the connection does get dropped
+for any reason, the underlying socket will emit an error and 
+will, eventually, get properly removed from the pool by the HTTP Agent.
 
 TODO
 ----
