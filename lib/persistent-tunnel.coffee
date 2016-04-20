@@ -27,7 +27,6 @@ module.exports.createConnection = (options, cb) ->
 			if proxyOptions.timeout?
 				socket.setTimeout proxyOptions.timeout, ->
 					socket.destroy()
-					socket.emit('agentRemove')
 			cb(null, socket)
 		else
 			onError(null, res)
