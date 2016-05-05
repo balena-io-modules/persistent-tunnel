@@ -47,8 +47,7 @@
       if (res.statusCode === 200) {
         if (proxyOptions.timeout != null) {
           socket.setTimeout(proxyOptions.timeout, function() {
-            socket.destroy();
-            return socket.emit('agentRemove');
+            return socket.destroy();
           });
         }
         return cb(null, socket);
