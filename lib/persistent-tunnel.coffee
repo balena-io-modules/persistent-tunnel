@@ -21,8 +21,6 @@ module.exports.createConnection = (options, cb) ->
 		cb(error)
 
 	onConnect = (res, socket, head) ->
-		socket.removeAllListeners()
-
 		if res.statusCode is 200
 			if proxyOptions.timeout?
 				socket.setTimeout proxyOptions.timeout, ->

@@ -43,7 +43,6 @@
       return cb(error);
     };
     onConnect = function(res, socket, head) {
-      socket.removeAllListeners();
       if (res.statusCode === 200) {
         if (proxyOptions.timeout != null) {
           socket.setTimeout(proxyOptions.timeout, function() {
