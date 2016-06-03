@@ -1,3 +1,4 @@
+net = require 'net'
 http = require 'http'
 nodeTunnel = require 'node-tunnel'
 Promise = require 'bluebird'
@@ -137,7 +138,7 @@ describe 'HTTP keepAlive Tunnel', ->
 				expect(err).to.be.an.instanceof(tunnel.TunnelingError)
 				done()
 
-	it 'throw an error if tunnel server drops connection', (done) ->
+	it 'should throw an error if tunnel server drops connection', (done) ->
 		agent = new tunnel.Agent
 			proxy:
 				host: 'localhost'
@@ -154,3 +155,34 @@ describe 'HTTP keepAlive Tunnel', ->
 			expect(err.statusCode).to.equal(402)
 			expect(err).to.be.an.instanceof(tunnel.TunnelingError)
 			done()
+
+	it 'should properly release socket if tunnel responds with a non 200 HTTP status', (done) ->
+		# If the socket is not properly released the test should fail with a timeout
+		@timeout(1000)
+
+		http.requestOrig = http.request
+		http.request = ->
+			req = http.requestOrig(arguments...)
+			if req.method is 'CONNECT'
+				req.on 'socket', (socket) ->
+					socket.on 'close', ->
+						# restore
+						http.request = http.requestOrig
+						done()
+			return req
+
+		agent = new tunnel.Agent
+			proxy:
+				host: 'localhost'
+				port: tunnelPort
+			keepAlive: true
+		agent.createConnection = tunnel.createConnection
+
+		tunnelProxy.use (req, socket, head, next) ->
+			socket.write('HTTP/1.0 402 Payment Required\r\n\r\n')
+			socket.end()
+
+		req = makeRequest(agent)
+		req.on 'error', (err) ->
+			expect(err.statusCode).to.equal(402)
+			expect(err).to.be.an.instanceof(tunnel.TunnelingError)
