@@ -25,7 +25,6 @@ var tunnelingAgent = new tunnel.Agent({
     port: 3128
   }
 });
-tunnelingAgent.createConnection = tunnel.createConnection;
 
 var req = http.request({
   host: 'example.com',
@@ -46,7 +45,6 @@ var tunnelingAgent = new tunnel.Agent({
     port: 3128
   },
 });
-tunnelingAgent.createConnection = tunnel.createConnection;
 
 var req = http.request({
   host: 'example.com',
@@ -68,7 +66,6 @@ var tunnelingAgent = new tunnel.Agent({
     timeout: 2000 // tunnel sockets close after 2s of inactivity
   },
 });
-tunnelingAgent.createConnection = tunnel.createConnection;
 
 var req = http.request({
   host: 'example.com',

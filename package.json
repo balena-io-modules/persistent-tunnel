@@ -2,14 +2,18 @@
   "name": "persistent-tunnel",
   "version": "1.2.4",
   "description": "HTTP Agent for tunneling proxies with persistent sockets",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "typing": "lib/index.d.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "pretest": "./node_modules/.bin/coffee -o build -c lib",
-    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register",
-    "prepublish": "./node_modules/.bin/coffee -o build -c lib"
+    "lint": "resin-lint --no-prettier --typescript src test",
+    "check": "tsc --pretty --noEmit --diagnostics --project .",
+    "build": "tsc --pretty --project ./tsconfig.dist.json",
+    "test": "mocha --require ts-node/register/type-check --require coffeescript/register test/*",
+    "prepublish": "require-npm4-to-publish",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -22,22 +26,35 @@
     "tunnel"
   ],
   "author": "Kostas Lekkas <kostas@resin.io>",
-  "license": "MIT",
+  "contributors": [
+    "Will Boyce <will@resin.io>"
+  ],
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/resin-io/persistent-tunnel/issues"
   },
   "homepage": "https://github.com/resin-io/persistent-tunnel#readme",
   "devDependencies": {
-    "bluebird": "^3.3.1",
-    "chai": "^3.5.0",
-    "coffee-script": "^1.10.0",
-    "mocha": "^2.4.5",
-    "node-tunnel": "^0.1.2"
+    "@types/bluebird": "^3.5.24",
+    "@types/chai": "^4.1.6",
+    "@types/lodash": "^4.14.116",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^8.10.34",
+    "bluebird": "^3.5.2",
+    "chai": "^4.2.0",
+    "coffeescript": "^2.3.2",
+    "lodash": "^4.17.11",
+    "mocha": "^5.2.0",
+    "node-tunnel": "^2.0.0",
+    "require-npm4-to-publish": "^1.0.0",
+    "resin-lint": "^2.0.1",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.1"
   },
   "dependencies": {
-    "typed-error": "^0.1.0"
+    "typed-error": "^3.0.0"
   },
   "engines": {
-    "node": "4.x"
+    "node": ">=6.0.0"
   }
 }
