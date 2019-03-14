@@ -1,0 +1,25 @@
+- commits:
+  - author: Will Boyce
+    body: ''
+    footers:
+      change-type: patch
+      signed-off-by: Will Boyce <will@balena.io>
+    hash: 1b2dddc710c690efa0ae88c5d119661a9329175c
+    subject: update dependencies
+  date: "2018-12-18T10:35:56Z"
+  version: 2.0.1
+- commits:
+  - author: Will Boyce
+    body: |-
+      * Require nodejs>=6.0 and extend http.Agent
+      * Move `createConnection` module-level export to `Agent` class
+      * Relicense under Apache 2.0
+      * Update dependencies
+    footers:
+      change-type: major
+      connects-to: '#8'
+      signed-off-by: Will Boyce <will@resin.io>
+    hash: d16f454cd0fc9a4e2fbafb9024517555bb8a0d16
+    subject: TypeScript rewrite
+  date: "2018-10-08T22:04:05Z"
+  version: 2.0.0
