@@ -19,7 +19,7 @@ import * as net from 'net';
 import { TypedError } from 'typed-error';
 
 export class TunnelingError extends TypedError {
-	statusCode?: number;
+	public statusCode?: number;
 }
 
 export interface ProxyOptions {
@@ -42,7 +42,10 @@ export class Agent extends http.Agent {
 		super(opts);
 	}
 
-	createConnection(options: CreateConnectionOptions, callback: (err?: Error, res?: net.Socket) => void): void {
+	public createConnection(
+		options: CreateConnectionOptions,
+		callback: (err?: Error, res?: net.Socket) => void,
+	): void {
 		const proxyOptions = options.proxy != null ? options.proxy : {};
 		const connectOptions = {
 			method: 'CONNECT',
@@ -61,7 +64,9 @@ export class Agent extends http.Agent {
 			if (res != null && res.statusCode != null) {
 				cause = code = res.statusCode;
 			}
-			const error = new TunnelingError(`tunneling socket could not be established: ${cause}`);
+			const error = new TunnelingError(
+				`tunneling socket could not be established: ${cause}`,
+			);
 			error.statusCode = code;
 			callback(error);
 		};
