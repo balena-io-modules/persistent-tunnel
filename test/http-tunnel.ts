@@ -1,5 +1,5 @@
 /*
-	Copyright 2018 Resin.io Ltd.
+	Copyright 2018 Balena Ltd.
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ let agent: tunnel.Agent | null = null;
 let server: http.Server | null = null;
 
 const createServer = () =>
-	Promise.fromCallback((cb) => {
+	Promise.fromCallback(cb => {
 		server = http.createServer((req, res) => {
 			res.writeHead(200);
 			res.end(`response${req.url}`);
@@ -40,23 +40,25 @@ const createServer = () =>
 	});
 
 const createTunnelProxy = () =>
-	Promise.fromCallback((cb) => {
+	Promise.fromCallback(cb => {
 		tunnelProxy = new nodeTunnel.Tunnel();
 		tunnelProxy.listen(tunnelPort, cb);
 	});
 
-const makeRequest = function(agent: http.Agent, i: number = 1, cb?: () => void) {
+const makeRequest = function(
+	httpAgent: http.Agent,
+	i: number = 1,
+	cb?: () => void,
+) {
 	const reqOptions = {
 		port: serverPort,
 		path: `/${i}`,
-		agent,
+		agent: httpAgent,
 	};
 
-	const req = http.request(reqOptions, (res) => {
-		res.on('data', (data) =>
-			expect(data.toString()).to.equal(`response/${i}`));
-		res.on('end', () =>
-			cb != null && cb());
+	const req = http.request(reqOptions, res => {
+		res.on('data', data => expect(data.toString()).to.equal(`response/${i}`));
+		res.on('end', () => cb != null && cb());
 	});
 
 	req.end();
@@ -67,13 +69,9 @@ describe('TypeScript', () => {
 	describe('HTTP keepAlive Tunnel', function() {
 		this.timeout(2500);
 
-		beforeEach(() =>
-			Promise.all([
-				createServer(),
-				createTunnelProxy(),
-			]));
+		beforeEach(() => Promise.all([createServer(), createTunnelProxy()]));
 
-		afterEach((done) => {
+		afterEach(done => {
 			if (server != null) {
 				server.close();
 			}
@@ -83,7 +81,7 @@ describe('TypeScript', () => {
 			done();
 		});
 
-		it('should make tunneling requests', (done) => {
+		it('should make tunneling requests', done => {
 			agent = new tunnel.Agent({
 				proxy: {
 					host: 'localhost',
@@ -91,11 +89,10 @@ describe('TypeScript', () => {
 				},
 			});
 
-			_.times(N, (i) =>
-				makeRequest(agent!, i, () => i === (N - 1) && done()));
+			_.times(N, i => makeRequest(agent!, i, () => i === N - 1 && done()));
 		});
 
-		it('should keep alive', (done) => {
+		it('should keep alive', done => {
 			agent = new tunnel.Agent({
 				keepAlive: true,
 				proxy: {
@@ -104,8 +101,7 @@ describe('TypeScript', () => {
 				},
 			});
 
-			_.times(N, (i) =>
-				makeRequest(agent!, i, () => i === (N - 1) && done()));
+			_.times(N, i => makeRequest(agent!, i, () => i === N - 1 && done()));
 		});
 
 		it('should reuse socket', function(done) {
@@ -118,12 +114,12 @@ describe('TypeScript', () => {
 			});
 
 			let savedSocket: net.Socket | null = null;
-			[ 0, 1 ].map((i) =>
+			[0, 1].map(i =>
 				// A delay is induced here to 1. allow the connection to be
 				// established and 2. give the socket pooling callbacks a chance to run
-				setTimeout(() =>
-						makeRequest(agent!, i)
-						.on('socket', (socket) => {
+				setTimeout(
+					() =>
+						makeRequest(agent!, i).on('socket', socket => {
 							if (savedSocket == null) {
 								savedSocket = socket;
 							} else {
@@ -131,10 +127,12 @@ describe('TypeScript', () => {
 								done();
 							}
 						}),
-					i * 200));
+					i * 200,
+				),
+			);
 		});
 
-		it('should remove socket after timeout and use a new one', (done) => {
+		it('should remove socket after timeout and use a new one', done => {
 			const socketTimeout = 500;
 
 			agent = new tunnel.Agent({
@@ -147,21 +145,23 @@ describe('TypeScript', () => {
 			});
 
 			let savedSocket: net.Socket | null = null;
-			[ 0, 1 ].map((i) =>
-				setTimeout(() =>
-						makeRequest(agent!, i)
-						.on('socket', (socket) => {
+			[0, 1].map(i =>
+				setTimeout(
+					() =>
+						makeRequest(agent!, i).on('socket', socket => {
 							if (savedSocket == null) {
-								return savedSocket = socket;
+								return (savedSocket = socket);
 							} else {
 								expect(socket).to.not.equal(savedSocket);
 								done();
 							}
 						}),
-					i * (socketTimeout * 2)));
+					i * (socketTimeout * 2),
+				),
+			);
 		});
 
-		it('should throw error if tunnel cannot be established', (done) => {
+		it('should throw error if tunnel cannot be established', done => {
 			agent = new tunnel.Agent({
 				proxy: {
 					host: 'localhost',
@@ -171,12 +171,12 @@ describe('TypeScript', () => {
 			});
 
 			tunnelProxy!.close(() =>
-				makeRequest(agent!)
-				.on('error', (err: tunnel.TunnelingError) => {
+				makeRequest(agent!).on('error', (err: tunnel.TunnelingError) => {
 					expect(err.statusCode).to.equal(500);
 					expect(err).to.be.an.instanceof(tunnel.TunnelingError);
 					done();
-				}));
+				}),
+			);
 		});
 
 		it('should throw an error if tunnel server drops connection', function(done) {
@@ -193,8 +193,7 @@ describe('TypeScript', () => {
 				socket.end();
 			});
 
-			makeRequest(agent)
-			.on('error', (err: tunnel.TunnelingError) => {
+			makeRequest(agent).on('error', (err: tunnel.TunnelingError) => {
 				expect(err.statusCode).to.equal(402);
 				expect(err).to.be.an.instanceof(tunnel.TunnelingError);
 				done();
@@ -207,15 +206,16 @@ describe('TypeScript', () => {
 
 			const httpRequest = http.request;
 
-			(<any>http).request = (opts?: any, cb?: any) => {
+			(http as any).request = (opts?: any, cb?: any) => {
 				const req = httpRequest(opts, cb);
-				if ((<any>req).method === 'CONNECT') {
-					req.on('socket', (socket) =>
+				if ((req as any).method === 'CONNECT') {
+					req.on('socket', socket =>
 						socket.on('close', () => {
 							// restore
-							(<any>http).request = httpRequest;
+							(http as any).request = httpRequest;
 							done();
-						}));
+						}),
+					);
 				}
 				return req;
 			};
@@ -233,8 +233,7 @@ describe('TypeScript', () => {
 				socket.end();
 			});
 
-			makeRequest(agent)
-			.on('error', (err: tunnel.TunnelingError) => {
+			makeRequest(agent).on('error', (err: tunnel.TunnelingError) => {
 				expect(err.statusCode).to.equal(402);
 				expect(err).to.be.an.instanceof(tunnel.TunnelingError);
 			});
