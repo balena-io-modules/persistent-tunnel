@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/balena-io/persistent-tunnel.git"
+    "url": "git+https://github.com/balena-io-modules/persistent-tunnel.git"
   },
   "keywords": [
     "http",
@@ -32,9 +32,9 @@
   ],
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/balena-io/persistent-tunnel/issues"
+    "url": "https://github.com/balena-io-modules/persistent-tunnel/issues"
   },
-  "homepage": "https://github.com/balena-io/persistent-tunnel#readme",
+  "homepage": "https://github.com/balena-io-modules/persistent-tunnel#readme",
   "devDependencies": {
     "@types/bluebird": "^3.5.26",
     "@types/chai": "^4.1.7",

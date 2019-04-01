@@ -97,8 +97,8 @@ resources.
 If no `timeout` value is set, the pooled tunneling sockets will be kept alive forever.
 
 In any case, if a tunnel connection gets dropped for any reason, the underlying
-socket will emit an error that [will result in it being removed from the
-HTTP Agent pool](https://github.com/balena-io/persistent-tunnel/blob/master/vendor/_http_agent.js#L246-L252) (and its resources released, too).
+socket will emit an error that [will result in it being removed from the HTTP
+Agent pool (and its resources released, too).
 
 TODO
 ----
@@ -108,8 +108,8 @@ TODO
 Support
 -------
 
-If you're having any problem, please [raise an issue](https://github.com/balena-io/persistent-tunnel/issues/new) on GitHub and the Balena team will be happy to help.
+If you're having any problem, please [raise an issue](https://github.com/balena-io-modules/persistent-tunnel/issues/new) on GitHub and the Balena team will be happy to help.
 
 ## License
 
-Licensed under the [MIT](https://github.com/balena-io/persistent-tunnel/blob/master/LICENSE) license.
+Licensed under the [MIT](https://github.com/balena-io-modules/persistent-tunnel/blob/master/LICENSE) license.
