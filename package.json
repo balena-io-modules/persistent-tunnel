@@ -56,7 +56,7 @@
     "typescript": "^3.4.1"
   },
   "dependencies": {
-    "typed-error": "^3.0.3"
+    "typed-error": "^3.1.0"
   },
   "engines": {
     "node": ">=6.0.0"
