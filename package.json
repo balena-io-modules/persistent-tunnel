@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/resin-io/persistent-tunnel.git"
+    "url": "git+https://github.com/balena-io/persistent-tunnel.git"
   },
   "keywords": [
     "http",
@@ -26,15 +26,15 @@
     "proxy",
     "tunnel"
   ],
-  "author": "Kostas Lekkas <kostas@resin.io>",
+  "author": "Kostas Lekkas <kostas@balena.io>",
   "contributors": [
-    "Will Boyce <will@resin.io>"
+    "Will Boyce <will@balena.io>"
   ],
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/resin-io/persistent-tunnel/issues"
+    "url": "https://github.com/balena-io/persistent-tunnel/issues"
   },
-  "homepage": "https://github.com/resin-io/persistent-tunnel#readme",
+  "homepage": "https://github.com/balena-io/persistent-tunnel#readme",
   "devDependencies": {
     "@types/bluebird": "^3.5.26",
     "@types/chai": "^4.1.7",
