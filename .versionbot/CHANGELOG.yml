@@ -1,25 +1,73 @@
 - commits:
-  - author: Will Boyce
-    body: ''
-    footers:
-      change-type: patch
-      signed-off-by: Will Boyce <will@balena.io>
-    hash: 1b2dddc710c690efa0ae88c5d119661a9329175c
-    subject: update dependencies
-  date: "2018-12-18T10:35:56Z"
+    - subject: 'rename: s/resin/balena'
+      hash: 41ee5e165151bf4a91558a17366f6f03ac753bac
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: 'dev: Enforce prettier coding standards'
+      hash: 5b937b21235fcdcbec0ee1d87fe1db5bb6122292
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: 'npm: Update dependencies and remove `package-lock.json`'
+      hash: e55b2ded1ddbc2737f511ef62271f07d6f36f7aa
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: 'codeowners: Add @wrboyce, @Page-, and @hedss'
+      hash: 1eec55650268160b97dabaf1ba0a668c32132798
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: 'versionbot: Add CHANGELOG.yml (for nested changelogs)'
+      hash: e977a6a94d5d41fec36cf0bb42971f40628ba250
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+  version: 2.1.0
+  date: 2019-04-01T11:16:11.648Z
+- commits:
+    - author: Will Boyce
+      body: ''
+      footers:
+        change-type: patch
+        signed-off-by: Will Boyce <will@balena.io>
+      hash: 1b2dddc710c690efa0ae88c5d119661a9329175c
+      subject: update dependencies
+  date: '2018-12-18T10:35:56Z'
   version: 2.0.1
 - commits:
-  - author: Will Boyce
-    body: |-
-      * Require nodejs>=6.0 and extend http.Agent
-      * Move `createConnection` module-level export to `Agent` class
-      * Relicense under Apache 2.0
-      * Update dependencies
-    footers:
-      change-type: major
-      connects-to: '#8'
-      signed-off-by: Will Boyce <will@resin.io>
-    hash: d16f454cd0fc9a4e2fbafb9024517555bb8a0d16
-    subject: TypeScript rewrite
-  date: "2018-10-08T22:04:05Z"
+    - author: Will Boyce
+      body: |-
+        * Require nodejs>=6.0 and extend http.Agent
+        * Move `createConnection` module-level export to `Agent` class
+        * Relicense under Apache 2.0
+        * Update dependencies
+      footers:
+        change-type: major
+        connects-to: '#8'
+        signed-off-by: Will Boyce <will@resin.io>
+      hash: d16f454cd0fc9a4e2fbafb9024517555bb8a0d16
+      subject: TypeScript rewrite
+  date: '2018-10-08T22:04:05Z'
   version: 2.0.0
