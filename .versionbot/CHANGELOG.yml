@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'rename: Move to `balena-io-modules` org'
+      hash: f8f167fa3397b7bdf73e43cfeb4758c0c3c8f858
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: 'npm: Fix invalid `typed-error` dependency version'
+      hash: 462d7d50627674685f3cba1aaea386c643794f8e
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+  version: 2.2.0
+  date: 2019-04-01T11:36:07.967Z
+- commits:
     - subject: 'rename: s/resin/balena'
       hash: 41ee5e165151bf4a91558a17366f6f03ac753bac
       body: ''
