@@ -1,6 +1,6 @@
 {
   "name": "persistent-tunnel",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "HTTP Agent for tunneling proxies with persistent sockets",
   "main": "lib/index.js",
   "typing": "lib/index.d.ts",

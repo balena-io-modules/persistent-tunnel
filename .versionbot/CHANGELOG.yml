@@ -1,4 +1,15 @@
 - commits:
+    - subject: Delete .github directory
+      hash: cb744dce44f9a82bb9a4d695d5efff34fb47b93c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: dfunckt
+      nested: []
+  version: 2.2.1
+  date: 2021-07-01T05:03:07.342Z
+- commits:
     - subject: 'rename: Move to `balena-io-modules` org'
       hash: f8f167fa3397b7bdf73e43cfeb4758c0c3c8f858
       body: ''
