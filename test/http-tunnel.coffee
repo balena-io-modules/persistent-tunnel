@@ -14,7 +14,6 @@
 	limitations under the License.
 ###
 
-net = require 'net'
 http = require 'http'
 nodeTunnel = require 'node-tunnel'
 Promise = require 'bluebird'
@@ -60,7 +59,7 @@ describe 'CoffeeScript', ->
 	describe 'HTTP keepAlive Tunnel', ->
 		@timeout(2500)
 
-		beforeEach () ->
+		beforeEach ->
 			createServer()
 			.then(createTunnelProxy())
 
