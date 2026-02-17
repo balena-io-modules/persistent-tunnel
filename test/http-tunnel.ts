@@ -31,7 +31,7 @@ let agent: tunnel.Agent | null = null;
 let server: http.Server | null = null;
 
 const createServer = () =>
-	Promise.fromCallback(cb => {
+	Promise.fromCallback((cb) => {
 		server = http.createServer((req, res) => {
 			res.writeHead(200);
 			res.end(`response${req.url}`);
@@ -40,12 +40,12 @@ const createServer = () =>
 	});
 
 const createTunnelProxy = () =>
-	Promise.fromCallback(cb => {
+	Promise.fromCallback((cb) => {
 		tunnelProxy = new nodeTunnel.Tunnel();
 		tunnelProxy.listen(tunnelPort, cb);
 	});
 
-const makeRequest = function(
+const makeRequest = function (
 	httpAgent: http.Agent,
 	i: number = 1,
 	cb?: () => void,
@@ -56,8 +56,8 @@ const makeRequest = function(
 		agent: httpAgent,
 	};
 
-	const req = http.request(reqOptions, res => {
-		res.on('data', data => expect(data.toString()).to.equal(`response/${i}`));
+	const req = http.request(reqOptions, (res) => {
+		res.on('data', (data) => expect(data.toString()).to.equal(`response/${i}`));
 		res.on('end', () => cb != null && cb());
 	});
 
@@ -66,12 +66,12 @@ const makeRequest = function(
 };
 
 describe('TypeScript', () => {
-	describe('HTTP keepAlive Tunnel', function() {
+	describe('HTTP keepAlive Tunnel', function () {
 		this.timeout(2500);
 
 		beforeEach(() => Promise.all([createServer(), createTunnelProxy()]));
 
-		afterEach(done => {
+		afterEach((done) => {
 			if (server != null) {
 				server.close();
 			}
@@ -81,7 +81,7 @@ describe('TypeScript', () => {
 			done();
 		});
 
-		it('should make tunneling requests', done => {
+		it('should make tunneling requests', (done) => {
 			agent = new tunnel.Agent({
 				proxy: {
 					host: 'localhost',
@@ -89,10 +89,10 @@ describe('TypeScript', () => {
 				},
 			});
 
-			_.times(N, i => makeRequest(agent!, i, () => i === N - 1 && done()));
+			_.times(N, (i) => makeRequest(agent!, i, () => i === N - 1 && done()));
 		});
 
-		it('should keep alive', done => {
+		it('should keep alive', (done) => {
 			agent = new tunnel.Agent({
 				keepAlive: true,
 				proxy: {
@@ -101,10 +101,10 @@ describe('TypeScript', () => {
 				},
 			});
 
-			_.times(N, i => makeRequest(agent!, i, () => i === N - 1 && done()));
+			_.times(N, (i) => makeRequest(agent!, i, () => i === N - 1 && done()));
 		});
 
-		it('should reuse socket', function(done) {
+		it('should reuse socket', function (done) {
 			agent = new tunnel.Agent({
 				keepAlive: true,
 				proxy: {
@@ -114,12 +114,12 @@ describe('TypeScript', () => {
 			});
 
 			let savedSocket: net.Socket | null = null;
-			[0, 1].map(i =>
+			[0, 1].map((i) =>
 				// A delay is induced here to 1. allow the connection to be
 				// established and 2. give the socket pooling callbacks a chance to run
 				setTimeout(
 					() =>
-						makeRequest(agent!, i).on('socket', socket => {
+						makeRequest(agent!, i).on('socket', (socket) => {
 							if (savedSocket == null) {
 								savedSocket = socket;
 							} else {
@@ -132,7 +132,7 @@ describe('TypeScript', () => {
 			);
 		});
 
-		it('should remove socket after timeout and use a new one', done => {
+		it('should remove socket after timeout and use a new one', (done) => {
 			const socketTimeout = 500;
 
 			agent = new tunnel.Agent({
@@ -145,10 +145,10 @@ describe('TypeScript', () => {
 			});
 
 			let savedSocket: net.Socket | null = null;
-			[0, 1].map(i =>
+			[0, 1].map((i) =>
 				setTimeout(
 					() =>
-						makeRequest(agent!, i).on('socket', socket => {
+						makeRequest(agent!, i).on('socket', (socket) => {
 							if (savedSocket == null) {
 								return (savedSocket = socket);
 							} else {
@@ -161,7 +161,7 @@ describe('TypeScript', () => {
 			);
 		});
 
-		it('should throw error if tunnel cannot be established', done => {
+		it('should throw error if tunnel cannot be established', (done) => {
 			agent = new tunnel.Agent({
 				proxy: {
 					host: 'localhost',
@@ -179,7 +179,7 @@ describe('TypeScript', () => {
 			);
 		});
 
-		it('should throw an error if tunnel server drops connection', function(done) {
+		it('should throw an error if tunnel server drops connection', function (done) {
 			agent = new tunnel.Agent({
 				proxy: {
 					host: 'localhost',
@@ -200,7 +200,7 @@ describe('TypeScript', () => {
 			});
 		});
 
-		it('should properly release socket if tunnel responds with a non 200 HTTP status', function(done) {
+		it('should properly release socket if tunnel responds with a non 200 HTTP status', function (done) {
 			// If the socket is not properly released the test should fail with a timeout
 			this.timeout(1000);
 
@@ -209,7 +209,7 @@ describe('TypeScript', () => {
 			(http as any).request = (opts?: any, cb?: any) => {
 				const req = httpRequest(opts, cb);
 				if ((req as any).method === 'CONNECT') {
-					req.on('socket', socket =>
+					req.on('socket', (socket) =>
 						socket.on('close', () => {
 							// restore
 							(http as any).request = httpRequest;
