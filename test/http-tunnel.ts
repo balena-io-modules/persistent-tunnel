@@ -18,7 +18,7 @@ import Bluebird from 'bluebird';
 import { expect } from 'chai';
 import http from 'http';
 import _ from 'lodash';
-import net from 'net';
+import type net from 'net';
 import nodeTunnel from 'node-tunnel';
 
 import * as tunnel from '../lib/index.js';
@@ -36,7 +36,9 @@ const createServer = () =>
 			res.writeHead(200);
 			res.end(`response${req.url}`);
 		});
-		server.listen(serverPort, () => cb(undefined));
+		server.listen(serverPort, () => {
+			cb(undefined);
+		});
 	});
 
 const createTunnelProxy = () =>
@@ -45,11 +47,7 @@ const createTunnelProxy = () =>
 		tunnelProxy.listen(tunnelPort, cb);
 	});
 
-const makeRequest = function (
-	httpAgent: http.Agent,
-	i: number = 1,
-	cb?: () => void,
-) {
+const makeRequest = function (httpAgent: http.Agent, i = 1, cb?: () => void) {
 	const reqOptions = {
 		port: serverPort,
 		path: `/${i}`,
@@ -58,7 +56,9 @@ const makeRequest = function (
 
 	const req = http.request(reqOptions, (res) => {
 		res.on('data', (data) => expect(data.toString()).to.equal(`response/${i}`));
-		res.on('end', () => cb != null && cb());
+		res.on('end', () => {
+			cb?.();
+		});
 	});
 
 	req.end();
@@ -90,7 +90,13 @@ describe('TypeScript', () => {
 				},
 			});
 
-			_.times(N, (i) => makeRequest(agent!, i, () => i === N - 1 && done()));
+			_.times(N, (i) =>
+				makeRequest(agent, i, () => {
+					if (i === N - 1) {
+						done();
+					}
+				}),
+			);
 		});
 
 		it('should keep alive', (done) => {
@@ -102,7 +108,13 @@ describe('TypeScript', () => {
 				},
 			});
 
-			_.times(N, (i) => makeRequest(agent!, i, () => i === N - 1 && done()));
+			_.times(N, (i) =>
+				makeRequest(agent, i, () => {
+					if (i === N - 1) {
+						done();
+					}
+				}),
+			);
 		});
 
 		it('should reuse socket', function (done) {
@@ -120,7 +132,7 @@ describe('TypeScript', () => {
 				// established and 2. give the socket pooling callbacks a chance to run
 				setTimeout(
 					() =>
-						makeRequest(agent!, i).on('socket', (socket) => {
+						makeRequest(agent, i).on('socket', (socket) => {
 							if (savedSocket == null) {
 								savedSocket = socket;
 							} else {
@@ -149,7 +161,7 @@ describe('TypeScript', () => {
 			[0, 1].map((i) =>
 				setTimeout(
 					() =>
-						makeRequest(agent!, i).on('socket', (socket) => {
+						makeRequest(agent, i).on('socket', (socket) => {
 							if (savedSocket == null) {
 								return (savedSocket = socket);
 							} else {
@@ -172,7 +184,7 @@ describe('TypeScript', () => {
 			});
 
 			tunnelProxy!.close(() =>
-				makeRequest(agent!).on('error', (err: tunnel.TunnelingError) => {
+				makeRequest(agent).on('error', (err: tunnel.TunnelingError) => {
 					expect(err.statusCode).to.equal(500);
 					expect(err).to.be.an.instanceof(tunnel.TunnelingError);
 					done();

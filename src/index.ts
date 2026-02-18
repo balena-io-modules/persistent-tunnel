@@ -15,7 +15,7 @@
 */
 
 import http from 'http';
-import net from 'net';
+import type net from 'net';
 import { TypedError } from 'typed-error';
 
 export class TunnelingError extends TypedError {
@@ -32,10 +32,10 @@ export interface ProxyOptions {
 export interface AgentOptions extends ProxyOptions, http.AgentOptions {}
 
 export interface CreateConnectionOptions
-	extends ProxyOptions,
-		http.ClientRequestArgs {}
+	extends ProxyOptions, http.ClientRequestArgs {}
 
 export class Agent extends http.Agent {
+	// eslint-disable-next-line @typescript-eslint/no-useless-constructor
 	constructor(opts?: AgentOptions) {
 		super(opts);
 	}
@@ -44,11 +44,11 @@ export class Agent extends http.Agent {
 		options: CreateConnectionOptions,
 		callback: Parameters<http.Agent['createConnection']>[1],
 	): ReturnType<http.Agent['createConnection']> {
-		const proxyOptions = options.proxy != null ? options.proxy : {};
+		const proxyOptions = options.proxy ?? {};
 		const connectOptions = {
 			method: 'CONNECT',
-			host: proxyOptions.host || 'localhost',
-			port: proxyOptions.port || 3128,
+			host: proxyOptions.host ?? 'localhost',
+			port: proxyOptions.port ?? 3128,
 			path: `${options.host}:${options.port}`,
 			agent: false,
 		};
@@ -59,7 +59,7 @@ export class Agent extends http.Agent {
 			if (err != null) {
 				cause = err.message;
 			}
-			if (res != null && res.statusCode != null) {
+			if (res?.statusCode != null) {
 				cause = code = res.statusCode;
 			}
 			const error = new TunnelingError(
