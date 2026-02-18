@@ -26,16 +26,14 @@ export interface ProxyOptions {
 	proxy?: {
 		host?: string;
 		port?: number | string;
-		timeout?: number;
 	};
 }
 
 export interface AgentOptions extends ProxyOptions, http.AgentOptions {}
 
-export interface CreateConnectionOptions extends ProxyOptions {
-	host: string;
-	port: string;
-}
+export interface CreateConnectionOptions
+	extends ProxyOptions,
+		http.ClientRequestArgs {}
 
 export class Agent extends http.Agent {
 	constructor(opts?: AgentOptions) {
@@ -44,8 +42,8 @@ export class Agent extends http.Agent {
 
 	public createConnection(
 		options: CreateConnectionOptions,
-		callback: (err?: Error, res?: net.Socket) => void,
-	): void {
+		callback: Parameters<http.Agent['createConnection']>[1],
+	): ReturnType<http.Agent['createConnection']> {
 		const proxyOptions = options.proxy != null ? options.proxy : {};
 		const connectOptions = {
 			method: 'CONNECT',
@@ -68,15 +66,12 @@ export class Agent extends http.Agent {
 				`tunneling socket could not be established: ${cause}`,
 			);
 			error.statusCode = code;
-			callback(error);
+			callback?.(error, undefined as unknown as net.Socket);
 		};
 
 		const onConnect = (res: http.IncomingMessage, socket: net.Socket) => {
 			if (res.statusCode === 200) {
-				if (proxyOptions.timeout != null) {
-					socket.setTimeout(proxyOptions.timeout, socket.destroy);
-				}
-				callback(undefined, socket);
+				callback?.(null, socket);
 			} else {
 				onError(undefined, res);
 			}
@@ -86,5 +81,7 @@ export class Agent extends http.Agent {
 		req.once('connect', onConnect);
 		req.once('error', onError);
 		req.end();
+
+		return;
 	}
 }

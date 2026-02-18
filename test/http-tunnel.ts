@@ -14,7 +14,7 @@
 	limitations under the License.
 */
 
-import * as Promise from 'bluebird';
+import * as Bluebird from 'bluebird';
 import { expect } from 'chai';
 import * as http from 'http';
 import * as _ from 'lodash';
@@ -31,16 +31,16 @@ let agent: tunnel.Agent | null = null;
 let server: http.Server | null = null;
 
 const createServer = () =>
-	Promise.fromCallback((cb) => {
+	Bluebird.fromCallback((cb) => {
 		server = http.createServer((req, res) => {
 			res.writeHead(200);
 			res.end(`response${req.url}`);
 		});
-		server.listen(serverPort, cb);
+		server.listen(serverPort, () => cb(undefined));
 	});
 
 const createTunnelProxy = () =>
-	Promise.fromCallback((cb) => {
+	Bluebird.fromCallback((cb) => {
 		tunnelProxy = new nodeTunnel.Tunnel();
 		tunnelProxy.listen(tunnelPort, cb);
 	});
@@ -69,16 +69,17 @@ describe('TypeScript', () => {
 	describe('HTTP keepAlive Tunnel', function () {
 		this.timeout(2500);
 
-		beforeEach(() => Promise.all([createServer(), createTunnelProxy()]));
+		beforeEach(() => Bluebird.all([createServer(), createTunnelProxy()]));
 
-		afterEach((done) => {
+		afterEach(async () => {
+			// Add a delay to let sockets cleanup
+			await Bluebird.delay(10);
 			if (server != null) {
 				server.close();
 			}
 			if (tunnelProxy != null) {
 				tunnelProxy.close();
 			}
-			done();
 		});
 
 		it('should make tunneling requests', (done) => {
@@ -137,10 +138,10 @@ describe('TypeScript', () => {
 
 			agent = new tunnel.Agent({
 				keepAlive: true,
+				timeout: socketTimeout,
 				proxy: {
 					host: 'localhost',
 					port: tunnelPort,
-					timeout: socketTimeout,
 				},
 			});
 
