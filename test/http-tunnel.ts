@@ -14,9 +14,9 @@
 	limitations under the License.
 */
 
-import * as Bluebird from 'bluebird';
+import Bluebird from 'bluebird';
 import { expect } from 'chai';
-import * as http from 'http';
+import http from 'http';
 import * as _ from 'lodash';
 import * as net from 'net';
 import * as nodeTunnel from 'node-tunnel';

@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "node20",
 		"outDir": "lib",
 		"target": "es2024",
 		"declaration": true,
