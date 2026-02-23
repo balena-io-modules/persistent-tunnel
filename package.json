@@ -54,9 +54,6 @@
     "require-npm4-to-publish": "^1.0.0",
     "typescript": "^5.9.3"
   },
-  "dependencies": {
-    "typed-error": "^3.1.0"
-  },
   "engines": {
     "node": "^22.22.0 || >=24.13.1",
     "npm": ">=10.9.4"

@@ -16,9 +16,8 @@
 
 import http from 'http';
 import type net from 'net';
-import { TypedError } from 'typed-error';
 
-export class TunnelingError extends TypedError {
+export class TunnelingError extends Error {
 	public statusCode?: number;
 }
 
