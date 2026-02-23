@@ -17,14 +17,14 @@
 import Bluebird from 'bluebird';
 import { expect } from 'chai';
 import http from 'http';
-import * as _ from 'lodash';
-import * as net from 'net';
-import * as nodeTunnel from 'node-tunnel';
+import _ from 'lodash';
+import net from 'net';
+import nodeTunnel from 'node-tunnel';
 
-import * as tunnel from '../src';
+import * as tunnel from '../lib/index.js';
 
 const N = 5;
-const serverPort = 8080;
+const serverPort = 8081;
 const tunnelPort = 3128;
 let tunnelProxy: nodeTunnel.Tunnel | null = null;
 let agent: tunnel.Agent | null = null;

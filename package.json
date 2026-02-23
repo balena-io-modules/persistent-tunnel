@@ -2,7 +2,7 @@
   "name": "persistent-tunnel",
   "version": "2.2.1",
   "description": "HTTP Agent for tunneling proxies with persistent sockets",
-  "type": "commonjs",
+  "type": "module",
   "main": "lib/index.js",
   "typing": "lib/index.d.ts",
   "directories": {
@@ -13,7 +13,8 @@
     "lint-fix": "balena-lint --typescript --fix src/ test/",
     "check": "tsc --pretty --noEmit --diagnostics --project .",
     "build": "tsc --pretty --project ./tsconfig.dist.json",
-    "test": "mocha --require ts-node/register/type-check test/*",
+    "pretest": "npm run build",
+    "test": "mocha --extension ts test",
     "prepublish": "require-npm4-to-publish",
     "prepare": "npm run build"
   },
@@ -51,7 +52,6 @@
     "mocha": "^6.0.2",
     "node-tunnel": "^2.1.1",
     "require-npm4-to-publish": "^1.0.0",
-    "ts-node": "^8.0.3",
     "typescript": "^5.9.3"
   },
   "dependencies": {

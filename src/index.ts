@@ -14,8 +14,8 @@
 	limitations under the License.
 */
 
-import * as http from 'http';
-import * as net from 'net';
+import http from 'http';
+import net from 'net';
 import { TypedError } from 'typed-error';
 
 export class TunnelingError extends TypedError {
