@@ -16,7 +16,6 @@
 
 import { expect } from 'chai';
 import http from 'http';
-import _ from 'lodash';
 import type net from 'net';
 import nodeTunnel from 'node-tunnel';
 
@@ -88,7 +87,7 @@ describe('TypeScript', () => {
 				},
 			});
 
-			_.times(N, (i) =>
+			Array.from({ length: N }, (_v, i) =>
 				makeRequest(agent, i, () => {
 					if (i === N - 1) {
 						done();
@@ -106,7 +105,7 @@ describe('TypeScript', () => {
 				},
 			});
 
-			_.times(N, (i) =>
+			Array.from({ length: N }, (_v, i) =>
 				makeRequest(agent, i, () => {
 					if (i === N - 1) {
 						done();
