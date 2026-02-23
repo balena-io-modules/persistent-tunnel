@@ -14,7 +14,6 @@
 	limitations under the License.
 */
 
-import Bluebird from 'bluebird';
 import { expect } from 'chai';
 import http from 'http';
 import _ from 'lodash';
@@ -22,6 +21,7 @@ import type net from 'net';
 import nodeTunnel from 'node-tunnel';
 
 import * as tunnel from '../lib/index.js';
+import { setTimeout } from 'timers/promises';
 
 const N = 5;
 const serverPort = 8081;
@@ -31,20 +31,18 @@ let agent: tunnel.Agent | null = null;
 let server: http.Server | null = null;
 
 const createServer = () =>
-	Bluebird.fromCallback((cb) => {
+	new Promise<void>((resolve) => {
 		server = http.createServer((req, res) => {
 			res.writeHead(200);
 			res.end(`response${req.url}`);
 		});
-		server.listen(serverPort, () => {
-			cb(undefined);
-		});
+		server.listen(serverPort, resolve);
 	});
 
 const createTunnelProxy = () =>
-	Bluebird.fromCallback((cb) => {
+	new Promise<void>((resolve) => {
 		tunnelProxy = new nodeTunnel.Tunnel();
-		tunnelProxy.listen(tunnelPort, cb);
+		tunnelProxy.listen(tunnelPort, resolve);
 	});
 
 const makeRequest = function (httpAgent: http.Agent, i = 1, cb?: () => void) {
@@ -69,11 +67,11 @@ describe('TypeScript', () => {
 	describe('HTTP keepAlive Tunnel', function () {
 		this.timeout(2500);
 
-		beforeEach(() => Bluebird.all([createServer(), createTunnelProxy()]));
+		beforeEach(() => Promise.all([createServer(), createTunnelProxy()]));
 
 		afterEach(async () => {
 			// Add a delay to let sockets cleanup
-			await Bluebird.delay(10);
+			await setTimeout(10);
 			if (server != null) {
 				server.close();
 			}
@@ -127,22 +125,19 @@ describe('TypeScript', () => {
 			});
 
 			let savedSocket: net.Socket | null = null;
-			[0, 1].map((i) =>
+			void [0, 1].map(async (i) => {
 				// A delay is induced here to 1. allow the connection to be
 				// established and 2. give the socket pooling callbacks a chance to run
-				setTimeout(
-					() =>
-						makeRequest(agent, i).on('socket', (socket) => {
-							if (savedSocket == null) {
-								savedSocket = socket;
-							} else {
-								expect(socket).to.equal(savedSocket);
-								done();
-							}
-						}),
-					i * 200,
-				),
-			);
+				await setTimeout(i * 200);
+				makeRequest(agent, i).on('socket', (socket) => {
+					if (savedSocket == null) {
+						savedSocket = socket;
+					} else {
+						expect(socket).to.equal(savedSocket);
+						done();
+					}
+				});
+			});
 		});
 
 		it('should remove socket after timeout and use a new one', (done) => {
@@ -158,20 +153,17 @@ describe('TypeScript', () => {
 			});
 
 			let savedSocket: net.Socket | null = null;
-			[0, 1].map((i) =>
-				setTimeout(
-					() =>
-						makeRequest(agent, i).on('socket', (socket) => {
-							if (savedSocket == null) {
-								return (savedSocket = socket);
-							} else {
-								expect(socket).to.not.equal(savedSocket);
-								done();
-							}
-						}),
-					i * (socketTimeout * 2),
-				),
-			);
+			void [0, 1].map(async (i) => {
+				await setTimeout(i * (socketTimeout * 2));
+				makeRequest(agent, i).on('socket', (socket) => {
+					if (savedSocket == null) {
+						return (savedSocket = socket);
+					} else {
+						expect(socket).to.not.equal(savedSocket);
+						done();
+					}
+				});
+			});
 		});
 
 		it('should throw error if tunnel cannot be established', (done) => {

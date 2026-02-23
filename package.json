@@ -39,12 +39,10 @@
   "homepage": "https://github.com/balena-io-modules/persistent-tunnel#readme",
   "devDependencies": {
     "@balena/lint": "^9.3.13",
-    "@types/bluebird": "^3.5.42",
     "@types/chai": "^5.2.3",
     "@types/lodash": "^4.17.24",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.19.11",
-    "bluebird": "^3.7.2",
     "chai": "^6.2.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
