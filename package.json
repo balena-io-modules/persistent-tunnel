@@ -15,6 +15,7 @@
     "build": "tsc --pretty --project ./tsconfig.dist.json",
     "pretest": "npm run build",
     "test": "mocha --extension ts test",
+    "posttest": "npm run check",
     "prepublish": "require-npm4-to-publish",
     "prepare": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module && npm run build"
   },

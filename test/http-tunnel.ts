@@ -26,7 +26,6 @@ const N = 5;
 const serverPort = 8081;
 const tunnelPort = 3128;
 let tunnelProxy: nodeTunnel.Tunnel | null = null;
-let agent: tunnel.Agent | null = null;
 let server: http.Server | null = null;
 
 const createServer = () =>
@@ -80,7 +79,7 @@ describe('TypeScript', () => {
 		});
 
 		it('should make tunneling requests', (done) => {
-			agent = new tunnel.Agent({
+			const agent = new tunnel.Agent({
 				proxy: {
 					host: 'localhost',
 					port: tunnelPort,
@@ -97,7 +96,7 @@ describe('TypeScript', () => {
 		});
 
 		it('should keep alive', (done) => {
-			agent = new tunnel.Agent({
+			const agent = new tunnel.Agent({
 				keepAlive: true,
 				proxy: {
 					host: 'localhost',
@@ -115,7 +114,7 @@ describe('TypeScript', () => {
 		});
 
 		it('should reuse socket', function (done) {
-			agent = new tunnel.Agent({
+			const agent = new tunnel.Agent({
 				keepAlive: true,
 				proxy: {
 					host: 'localhost',
@@ -142,7 +141,7 @@ describe('TypeScript', () => {
 		it('should remove socket after timeout and use a new one', (done) => {
 			const socketTimeout = 500;
 
-			agent = new tunnel.Agent({
+			const agent = new tunnel.Agent({
 				keepAlive: true,
 				timeout: socketTimeout,
 				proxy: {
@@ -166,7 +165,7 @@ describe('TypeScript', () => {
 		});
 
 		it('should throw error if tunnel cannot be established', (done) => {
-			agent = new tunnel.Agent({
+			const agent = new tunnel.Agent({
 				proxy: {
 					host: 'localhost',
 					port: tunnelPort,
@@ -184,7 +183,7 @@ describe('TypeScript', () => {
 		});
 
 		it('should throw an error if tunnel server drops connection', function (done) {
-			agent = new tunnel.Agent({
+			const agent = new tunnel.Agent({
 				proxy: {
 					host: 'localhost',
 					port: tunnelPort,
@@ -224,7 +223,7 @@ describe('TypeScript', () => {
 				return req;
 			};
 
-			agent = new tunnel.Agent({
+			const agent = new tunnel.Agent({
 				proxy: {
 					host: 'localhost',
 					port: tunnelPort,
