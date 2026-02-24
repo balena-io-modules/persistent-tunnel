@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "node20",
 		"outDir": "lib",
-		"target": "ES6",
+		"target": "es2024",
 		"declaration": true,
 		"sourceMap": true,
 		"removeComments": true,
@@ -11,7 +11,8 @@
 		"noUnusedParameters": true,
 		"noUnusedLocals": true,
 		"preserveConstEnums": true,
-		"allowJs": false
+		"allowJs": false,
+		"skipLibCheck": true
 	},
 	"include": [
 		"src/**/*.ts",

@@ -14,11 +14,10 @@
 	limitations under the License.
 */
 
-import * as http from 'http';
-import * as net from 'net';
-import { TypedError } from 'typed-error';
+import http from 'http';
+import type net from 'net';
 
-export class TunnelingError extends TypedError {
+export class TunnelingError extends Error {
 	public statusCode?: number;
 }
 
@@ -26,31 +25,29 @@ export interface ProxyOptions {
 	proxy?: {
 		host?: string;
 		port?: number | string;
-		timeout?: number;
 	};
 }
 
 export interface AgentOptions extends ProxyOptions, http.AgentOptions {}
 
-export interface CreateConnectionOptions extends ProxyOptions {
-	host: string;
-	port: string;
-}
+export interface CreateConnectionOptions
+	extends ProxyOptions, http.ClientRequestArgs {}
 
 export class Agent extends http.Agent {
+	// eslint-disable-next-line @typescript-eslint/no-useless-constructor
 	constructor(opts?: AgentOptions) {
 		super(opts);
 	}
 
 	public createConnection(
 		options: CreateConnectionOptions,
-		callback: (err?: Error, res?: net.Socket) => void,
-	): void {
-		const proxyOptions = options.proxy != null ? options.proxy : {};
+		callback: Parameters<http.Agent['createConnection']>[1],
+	): ReturnType<http.Agent['createConnection']> {
+		const proxyOptions = options.proxy ?? {};
 		const connectOptions = {
 			method: 'CONNECT',
-			host: proxyOptions.host || 'localhost',
-			port: proxyOptions.port || 3128,
+			host: proxyOptions.host ?? 'localhost',
+			port: proxyOptions.port ?? 3128,
 			path: `${options.host}:${options.port}`,
 			agent: false,
 		};
@@ -61,22 +58,19 @@ export class Agent extends http.Agent {
 			if (err != null) {
 				cause = err.message;
 			}
-			if (res != null && res.statusCode != null) {
+			if (res?.statusCode != null) {
 				cause = code = res.statusCode;
 			}
 			const error = new TunnelingError(
 				`tunneling socket could not be established: ${cause}`,
 			);
 			error.statusCode = code;
-			callback(error);
+			callback?.(error, undefined as unknown as net.Socket);
 		};
 
 		const onConnect = (res: http.IncomingMessage, socket: net.Socket) => {
 			if (res.statusCode === 200) {
-				if (proxyOptions.timeout != null) {
-					socket.setTimeout(proxyOptions.timeout, socket.destroy);
-				}
-				callback(undefined, socket);
+				callback?.(null, socket);
 			} else {
 				onError(undefined, res);
 			}
@@ -86,5 +80,7 @@ export class Agent extends http.Agent {
 		req.once('connect', onConnect);
 		req.once('error', onError);
 		req.end();
+
+		return;
 	}
 }

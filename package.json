@@ -2,19 +2,22 @@
   "name": "persistent-tunnel",
   "version": "2.2.1",
   "description": "HTTP Agent for tunneling proxies with persistent sockets",
+  "type": "module",
   "main": "lib/index.js",
   "typing": "lib/index.d.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "lint": "resin-lint --typescript src/ test/",
-    "lint:fix": "prettier --config ./node_modules/resin-lint/config/.prettierrc --write \"{src,test,typings}/**/*.ts\"",
+    "lint": "balena-lint src/ test/",
+    "lint-fix": "balena-lint --fix src/ test/",
     "check": "tsc --pretty --noEmit --diagnostics --project .",
     "build": "tsc --pretty --project ./tsconfig.dist.json",
-    "test": "mocha --require ts-node/register/type-check --require coffeescript/register test/*",
+    "pretest": "npm run build",
+    "test": "mocha --extension ts test",
+    "posttest": "npm run check",
     "prepublish": "require-npm4-to-publish",
-    "prepare": "npm run build"
+    "prepare": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module && npm run build"
   },
   "repository": {
     "type": "git",
@@ -36,42 +39,25 @@
   },
   "homepage": "https://github.com/balena-io-modules/persistent-tunnel#readme",
   "devDependencies": {
-    "@types/bluebird": "^3.5.26",
-    "@types/chai": "^4.1.7",
-    "@types/lodash": "^4.14.123",
-    "@types/mocha": "^5.2.6",
-    "@types/node": "^10.14.4",
-    "bluebird": "^3.5.3",
-    "chai": "^4.2.0",
-    "coffeescript": "^2.4.0",
-    "husky": "^1.3.1",
-    "lint-staged": "^8.1.5",
-    "lodash": "^4.17.11",
-    "mocha": "^6.0.2",
-    "node-tunnel": "^2.1.1",
-    "prettier": "^1.16.4",
+    "@balena/lint": "^9.3.13",
+    "@types/chai": "^5.2.3",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.19.11",
+    "chai": "^6.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "mocha": "^11.7.5",
+    "node-tunnel": "^2.1.2",
     "require-npm4-to-publish": "^1.0.0",
-    "resin-lint": "^3.0.1",
-    "ts-node": "^8.0.3",
-    "typescript": "^3.4.1"
-  },
-  "dependencies": {
-    "typed-error": "^3.1.0"
+    "typescript": "^5.9.3"
   },
   "engines": {
-    "node": ">=6.0.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm run lint"
-    }
+    "node": "^22.22.0 || >=24.13.1",
+    "npm": ">=10.9.4"
   },
   "lint-staged": {
     "*.ts": [
-      "prettier --config ./node_modules/resin-lint/config/.prettierrc --write",
-      "resin-lint --typescript",
-      "git add"
+      "balena-lint --fix"
     ]
   }
 }
