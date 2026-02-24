@@ -1,7 +1,67 @@
 - commits:
+    - subject: Remove typed-error dependency and directly extend `Error`
+      hash: 87a7cdd3fd5a8bd44c4c8d11490af1cd659960c3
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Pagan Gazzard
+      nested: []
+    - subject: Convert to ESM
+      hash: 9316237625e128fffa03ee8a4e91bafc9cf46fea
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Pagan Gazzard
+      nested: []
+    - subject: Switch tsconfig module to Node20
+      hash: a88605cb0c69a5fea35c12f55a0f888cab964938
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+    - subject: Update tsconfig target to es2024
+      hash: da0cea106d64107c69e2e3ec1f81d6e863abd234
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Pagan Gazzard
+      nested: []
+    - subject: Move `timeout` option to the top level, supporting/requiring newer nodejs
+      hash: 42e2560d53211d64c26097e397d03dd3a30f99dc
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Pagan Gazzard
+      nested: []
+    - subject: Switch to balena-lint
+      hash: 9c9e26eb9ab769baca4af2f436e23b54e86a2ea9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+    - subject: Switch to flowzone
+      hash: 283ec99610fcd8d47f81a4414a0d23cd83c20396
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 3.0.0
+  title: ""
+  date: 2026-02-24T16:00:05.606Z
+- commits:
     - subject: Delete .github directory
       hash: cb744dce44f9a82bb9a4d695d5efff34fb47b93c
-      body: ''
+      body: ""
       footer:
         Change-type: patch
         change-type: patch
@@ -10,18 +70,18 @@
   version: 2.2.1
   date: 2021-07-01T05:03:07.342Z
 - commits:
-    - subject: 'rename: Move to `balena-io-modules` org'
+    - subject: "rename: Move to `balena-io-modules` org"
       hash: f8f167fa3397b7bdf73e43cfeb4758c0c3c8f858
-      body: ''
+      body: ""
       footer:
         Change-type: patch
         change-type: patch
         Signed-off-by: Will Boyce <will@balena.io>
         signed-off-by: Will Boyce <will@balena.io>
       author: Will Boyce
-    - subject: 'npm: Fix invalid `typed-error` dependency version'
+    - subject: "npm: Fix invalid `typed-error` dependency version"
       hash: 462d7d50627674685f3cba1aaea386c643794f8e
-      body: ''
+      body: ""
       footer:
         Change-type: minor
         change-type: minor
@@ -31,45 +91,45 @@
   version: 2.2.0
   date: 2019-04-01T11:36:07.967Z
 - commits:
-    - subject: 'rename: s/resin/balena'
+    - subject: "rename: s/resin/balena"
       hash: 41ee5e165151bf4a91558a17366f6f03ac753bac
-      body: ''
+      body: ""
       footer:
         Change-type: patch
         change-type: patch
         Signed-off-by: Will Boyce <will@balena.io>
         signed-off-by: Will Boyce <will@balena.io>
       author: Will Boyce
-    - subject: 'dev: Enforce prettier coding standards'
+    - subject: "dev: Enforce prettier coding standards"
       hash: 5b937b21235fcdcbec0ee1d87fe1db5bb6122292
-      body: ''
+      body: ""
       footer:
         Change-type: minor
         change-type: minor
         Signed-off-by: Will Boyce <will@balena.io>
         signed-off-by: Will Boyce <will@balena.io>
       author: Will Boyce
-    - subject: 'npm: Update dependencies and remove `package-lock.json`'
+    - subject: "npm: Update dependencies and remove `package-lock.json`"
       hash: e55b2ded1ddbc2737f511ef62271f07d6f36f7aa
-      body: ''
+      body: ""
       footer:
         Change-type: patch
         change-type: patch
         Signed-off-by: Will Boyce <will@balena.io>
         signed-off-by: Will Boyce <will@balena.io>
       author: Will Boyce
-    - subject: 'codeowners: Add @wrboyce, @Page-, and @hedss'
+    - subject: "codeowners: Add @wrboyce, @Page-, and @hedss"
       hash: 1eec55650268160b97dabaf1ba0a668c32132798
-      body: ''
+      body: ""
       footer:
         Change-type: patch
         change-type: patch
         Signed-off-by: Will Boyce <will@balena.io>
         signed-off-by: Will Boyce <will@balena.io>
       author: Will Boyce
-    - subject: 'versionbot: Add CHANGELOG.yml (for nested changelogs)'
+    - subject: "versionbot: Add CHANGELOG.yml (for nested changelogs)"
       hash: e977a6a94d5d41fec36cf0bb42971f40628ba250
-      body: ''
+      body: ""
       footer:
         Change-type: patch
         change-type: patch
@@ -80,13 +140,13 @@
   date: 2019-04-01T11:16:11.648Z
 - commits:
     - author: Will Boyce
-      body: ''
+      body: ""
       footers:
         change-type: patch
         signed-off-by: Will Boyce <will@balena.io>
       hash: 1b2dddc710c690efa0ae88c5d119661a9329175c
       subject: update dependencies
-  date: '2018-12-18T10:35:56Z'
+  date: 2018-12-18T10:35:56Z
   version: 2.0.1
 - commits:
     - author: Will Boyce
@@ -97,9 +157,9 @@
         * Update dependencies
       footers:
         change-type: major
-        connects-to: '#8'
+        connects-to: "#8"
         signed-off-by: Will Boyce <will@resin.io>
       hash: d16f454cd0fc9a4e2fbafb9024517555bb8a0d16
       subject: TypeScript rewrite
-  date: '2018-10-08T22:04:05Z'
+  date: 2018-10-08T22:04:05Z
   version: 2.0.0
